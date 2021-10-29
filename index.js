@@ -16,10 +16,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
-        // const database = client.db('volunteer_db');
-        // const volunteerCollection = database.collection('volunteer');
+        const database = client.db('tour_serviceDb');
+        const servicesCollection = database.collection('servicesList');
         //GET APi to get data
-
+        app.get('/services', async (req, res) => {
+            const cursor = servicesCollection.find({});
+            const services = await cursor.toArray();
+            res.send(services)
+        });
         console.log('db connected');
     } finally {
 
