@@ -23,6 +23,9 @@ async function run() {
         const servicesCollection = database.collection('servicesList');
         //colection for insert place order data
         const orderCollection = database.collection('orderList');
+
+
+
         //GET APi to get data
         app.get('/services', async (req, res) => {
             const cursor = servicesCollection.find({});
@@ -39,9 +42,16 @@ async function run() {
 
             const service = await servicesCollection.findOne(query);
             res.json(service);
-        })
+        });
+
 
         //API for getting all order list data
+        app.get('/orderlist', async (req, res) => {
+            const cursor = orderCollection.find({});
+            const allOrder = await cursor.toArray();
+            res.send(allOrder)
+        });
+
 
         //API for submit place order
         app.post('/orderlist', async (req, res) => {
@@ -51,8 +61,13 @@ async function run() {
             console.log('hiot', order)
             res.json(result)
         });
-
-
+        //API for delete a order
+        app.delete('/orderlist/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await orderCollection.deleteOne(query);
+            res.json(result)
+        });
 
         console.log('db connected');
     } finally {
