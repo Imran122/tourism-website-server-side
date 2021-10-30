@@ -21,6 +21,8 @@ async function run() {
         await client.connect();
         const database = client.db('tour_serviceDb');
         const servicesCollection = database.collection('servicesList');
+        //colection for insert place order data
+        const orderCollection = database.collection('orderList');
         //GET APi to get data
         app.get('/services', async (req, res) => {
             const cursor = servicesCollection.find({});
@@ -39,8 +41,16 @@ async function run() {
             res.json(service);
         })
 
+        //API for getting all order list data
 
+        //API for submit place order
+        app.post('/orderlist', async (req, res) => {
+            const order = req.body;
 
+            const result = await orderCollection.insertOne(order)
+            console.log('hiot', order)
+            res.json(result)
+        });
 
 
 
