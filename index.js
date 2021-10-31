@@ -34,6 +34,15 @@ async function run() {
         });
 
 
+        //API for post service
+        app.post('/services', async (req, res) => {
+            const service = req.body;
+            const result = await servicesCollection.insertOne(service);
+            res.json(result);
+        });
+
+
+
         //API for single data load
         app.get('/services/:id', async (req, res) => {
             const id = req.params.id;
@@ -68,6 +77,25 @@ async function run() {
             const result = await orderCollection.deleteOne(query);
             res.json(result)
         });
+
+        //API for update status approve or pending 
+        app.put('/orderlist/:id', async (req, res) => {
+            const id = req.params.id;
+            const updateOrder = req.body;
+            const filter = { _id: ObjectId(id) };
+            console.log(id);
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    status: updateOrder.status,
+                },
+            };
+            const result = await orderCollection.updateOne(filter, updateDoc, options);
+            res.json(result)
+        });
+
+
+
 
         console.log('db connected');
     } finally {
